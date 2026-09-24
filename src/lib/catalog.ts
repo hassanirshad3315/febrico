@@ -81,82 +81,120 @@ export const STOCK_LABEL: Record<Product["stock_status"], string> = {
 };
 
 async function fetchLayout() {
-  const [ann, cats, cols, settings] = await Promise.all([
-    supabase.from("announcements").select("*").order("priority", { ascending: false }),
-    supabase.from("categories").select("*").order("sort_order"),
-    supabase.from("collections").select("*").order("sort_order"),
-    supabase.from("site_settings").select("key,value"),
-  ]);
-  const s: Record<string, any> = {};
-  (settings.data ?? []).forEach((r) => (s[r.key] = r.value));
-  const mergedSettings = mergeSettings(s);
+  try {
+    const [ann, cats, cols, settings] = await Promise.all([
+      supabase.from("announcements").select("*").order("priority", { ascending: false }),
+      supabase.from("categories").select("*").order("sort_order"),
+      supabase.from("collections").select("*").order("sort_order"),
+      supabase.from("site_settings").select("key,value"),
+    ]);
+    const s: Record<string, any> = {};
+    (settings.data ?? []).forEach((r) => (s[r.key] = r.value));
+    const mergedSettings = mergeSettings(s);
 
-  return {
-    announcements: mergeAnnouncements(ann.data ?? []),
-    categories: mergeCategories((cats.data ?? []) as Category[]),
-    collections: mergeCollections((cols.data ?? []) as Collection[]),
-    settings: mergedSettings,
-  };
+    return {
+      announcements: mergeAnnouncements(ann.data ?? []),
+      categories: mergeCategories((cats.data ?? []) as Category[]),
+      collections: mergeCollections((cols.data ?? []) as Collection[]),
+      settings: mergedSettings,
+    };
+  } catch (e) {
+    console.warn("fetchLayout fallback:", e);
+    return {
+      announcements: mergeAnnouncements([]),
+      categories: mergeCategories([]),
+      collections: mergeCollections([]),
+      settings: mergeSettings({}),
+    };
+  }
 }
 export const layoutQuery = queryOptions({ queryKey: ["layout"], queryFn: fetchLayout, staleTime: 60_000 });
 
 async function productsByIds(ids: string[]) {
   if (!ids.length) return [];
-  const { data } = await supabase.from("products").select(PRODUCT_FIELDS).in("id", ids);
-  const allProds = mergeProducts((data as unknown as Product[] ?? []));
-  const map = new Map(allProds.map((p) => [p.id, p]));
-  return ids.map((id) => map.get(id)).filter(Boolean) as Product[];
+  try {
+    const { data } = await supabase.from("products").select(PRODUCT_FIELDS).in("id", ids);
+    const allProds = mergeProducts((data as unknown as Product[] ?? []));
+    const map = new Map(allProds.map((p) => [p.id, p]));
+    return ids.map((id) => map.get(id)).filter(Boolean) as Product[];
+  } catch {
+    const allProds = mergeProducts([]);
+    const map = new Map(allProds.map((p) => [p.id, p]));
+    return ids.map((id) => map.get(id)).filter(Boolean) as Product[];
+  }
 }
 
 export async function productsBySource(source: string, limit = 10): Promise<Product[]> {
-  if (["trending", "best_sellers", "top_week", "most_loved"].includes(source)) {
-    const { data } = await supabase.rpc("ranked_products", { _metric: source, _limit: limit });
-    const ranked = await productsByIds((data ?? []).map((r: any) => r.product_id));
-    if (ranked.length >= 4) return ranked;
-    // graceful fallback when there is not enough data yet
-    const { data: fb } = await supabase.from("products").select(PRODUCT_FIELDS).eq("is_featured", true).limit(limit);
-    const mergedFb = mergeProducts((fb as unknown as Product[]) ?? []);
-    return [...ranked, ...mergedFb.filter((p) => !ranked.find((r) => r.id === p.id))].slice(0, limit);
+  try {
+    if (["trending", "best_sellers", "top_week", "most_loved"].includes(source)) {
+      const { data } = await supabase.rpc("ranked_products", { _metric: source, _limit: limit });
+      const ranked = await productsByIds((data ?? []).map((r: any) => r.product_id));
+      if (ranked.length >= 4) return ranked;
+      // graceful fallback when there is not enough data yet
+      const { data: fb } = await supabase.from("products").select(PRODUCT_FIELDS).eq("is_featured", true).limit(limit);
+      const mergedFb = mergeProducts((fb as unknown as Product[]) ?? []);
+      return [...ranked, ...mergedFb.filter((p) => !ranked.find((r) => r.id === p.id))].slice(0, limit);
+    }
+    let q = supabase.from("products").select(PRODUCT_FIELDS).order("created_at", { ascending: false }).limit(limit);
+    if (source === "new") q = q.eq("is_new", true);
+    if (source === "sale") q = q.eq("on_sale", true);
+    if (source === "featured") q = q.eq("is_featured", true);
+    const { data } = await q;
+    return mergeProducts((data as unknown as Product[]) ?? []);
+  } catch {
+    const all = mergeProducts([]);
+    if (source === "new") return all.filter((p) => p.is_new).slice(0, limit);
+    if (source === "sale") return all.filter((p) => p.on_sale).slice(0, limit);
+    if (source === "featured") return all.filter((p) => p.is_featured).slice(0, limit);
+    return all.slice(0, limit);
   }
-  let q = supabase.from("products").select(PRODUCT_FIELDS).order("created_at", { ascending: false }).limit(limit);
-  if (source === "new") q = q.eq("is_new", true);
-  if (source === "sale") q = q.eq("on_sale", true);
-  if (source === "featured") q = q.eq("is_featured", true);
-  const { data } = await q;
-  return mergeProducts((data as unknown as Product[]) ?? []);
 }
 
 async function fetchHome() {
-  const [sections, hero] = await Promise.all([
-    supabase.from("homepage_sections").select("*").eq("enabled", true).order("sort_order"),
-    supabase.from("hero_slides").select("*").order("sort_order"),
-  ]);
-  const secs = sections.data ?? [];
-  const productSections = await Promise.all(
-    secs.map(async (s: any) =>
-      s.type === "product_carousel" ? productsBySource(s.config?.source ?? "new", s.config?.limit ?? 10) : null,
-    ),
-  );
-  const topCols: Record<string, Collection[]> = {};
-  for (const period of ["week", "month"]) {
-    const { data } = await supabase.rpc("ranked_collections", { _period: period, _limit: 2 });
-    const ids = (data ?? []).map((r: any) => r.collection_id);
-    if (ids.length) {
-      const { data: cs } = await supabase.from("collections").select("*").in("id", ids);
-      const mergedCols = mergeCollections((cs ?? []) as Collection[]);
-      topCols[period] = ids.map((id: string) => mergedCols.find((c: any) => c.id === id)).filter(Boolean) as Collection[];
-    } else topCols[period] = [];
+  try {
+    const [sections, hero] = await Promise.all([
+      supabase.from("homepage_sections").select("*").eq("enabled", true).order("sort_order"),
+      supabase.from("hero_slides").select("*").order("sort_order"),
+    ]);
+    const secs = sections.data ?? [];
+    const productSections = await Promise.all(
+      secs.map(async (s: any) =>
+        s.type === "product_carousel" ? productsBySource(s.config?.source ?? "new", s.config?.limit ?? 10) : null,
+      ),
+    );
+    const topCols: Record<string, Collection[]> = {};
+    for (const period of ["week", "month"]) {
+      try {
+        const { data } = await supabase.rpc("ranked_collections", { _period: period, _limit: 2 });
+        const ids = (data ?? []).map((r: any) => r.collection_id);
+        if (ids.length) {
+          const { data: cs } = await supabase.from("collections").select("*").in("id", ids);
+          const mergedCols = mergeCollections((cs ?? []) as Collection[]);
+          topCols[period] = ids.map((id: string) => mergedCols.find((c: any) => c.id === id)).filter(Boolean) as Collection[];
+        } else topCols[period] = [];
+      } catch {
+        topCols[period] = mergeCollections([]).slice(0, 2);
+      }
+    }
+    const { data: lookbooks } = await supabase
+      .from("lookbooks")
+      .select("*, items:lookbook_items(*)")
+      .order("sort_order");
+    return {
+      sections: secs.map((s: any, i: number) => ({ ...s, products: productSections[i] })),
+      hero: mergeHeroSlides(hero.data ?? []),
+      topCollections: topCols,
+      lookbooks: lookbooks ?? [],
+    };
+  } catch (e) {
+    console.warn("fetchHome fallback:", e);
+    return {
+      sections: [],
+      hero: mergeHeroSlides([]),
+      topCollections: { week: mergeCollections([]).slice(0, 2), month: mergeCollections([]).slice(0, 2) },
+      lookbooks: [],
+    };
   }
-  const { data: lookbooks } = await supabase
-    .from("lookbooks")
-    .select("*, items:lookbook_items(*)")
-    .order("sort_order");
-  return {
-    sections: secs.map((s: any, i: number) => ({ ...s, products: productSections[i] })),
-    hero: mergeHeroSlides(hero.data ?? []),
-    topCollections: topCols,
-    lookbooks: lookbooks ?? [],
-  };
 }
 export const homeQuery = queryOptions({ queryKey: ["home"], queryFn: fetchHome, staleTime: 30_000 });
 
@@ -179,46 +217,64 @@ export type ListFilters = {
 export const PAGE_SIZE = 12;
 
 export async function listProducts(f: ListFilters, ids: { categoryIds?: string[] | undefined; collectionId?: string | undefined } = {}) {
-  let q = supabase.from("products").select(PRODUCT_FIELDS, { count: "exact" });
-  if (ids.categoryIds) q = q.in("category_id", ids.categoryIds);
-  if (ids.collectionId) q = q.eq("collection_id", ids.collectionId);
-  if (f.newOnly) q = q.eq("is_new", true);
-  if (f.sale) q = q.eq("on_sale", true);
-  if (f.sizes?.length) q = q.overlaps("sizes", f.sizes);
-  if (f.colors?.length) q = q.overlaps("colors", f.colors);
-  if (f.fabrics?.length) q = q.in("fabric", f.fabrics);
-  if (f.season) q = q.eq("season", f.season);
-  if (f.availability) q = q.eq("stock_status", f.availability);
-  if (f.min) q = q.gte("price", f.min);
-  if (f.max) q = q.lte("price", f.max);
-  if (f.q) {
-    const term = f.q.replace(/[%,()]/g, " ").trim();
-    q = q.or(`name.ilike.%${term}%,sku.ilike.%${term}%,fabric.ilike.%${term}%,tags.cs.{${term.toLowerCase()}}`);
+  try {
+    let q = supabase.from("products").select(PRODUCT_FIELDS, { count: "exact" });
+    if (ids.categoryIds) q = q.in("category_id", ids.categoryIds);
+    if (ids.collectionId) q = q.eq("collection_id", ids.collectionId);
+    if (f.newOnly) q = q.eq("is_new", true);
+    if (f.sale) q = q.eq("on_sale", true);
+    if (f.sizes?.length) q = q.overlaps("sizes", f.sizes);
+    if (f.colors?.length) q = q.overlaps("colors", f.colors);
+    if (f.fabrics?.length) q = q.in("fabric", f.fabrics);
+    if (f.season) q = q.eq("season", f.season);
+    if (f.availability) q = q.eq("stock_status", f.availability);
+    if (f.min) q = q.gte("price", f.min);
+    if (f.max) q = q.lte("price", f.max);
+    if (f.q) {
+      const term = f.q.replace(/[%,()]/g, " ").trim();
+      q = q.or(`name.ilike.%${term}%,sku.ilike.%${term}%,fabric.ilike.%${term}%,tags.cs.{${term.toLowerCase()}}`);
+    }
+    switch (f.sort) {
+      case "price_asc":
+        q = q.order("price", { ascending: true });
+        break;
+      case "price_desc":
+        q = q.order("price", { ascending: false });
+        break;
+      case "newest":
+        q = q.order("created_at", { ascending: false });
+        break;
+      default:
+        q = q.order("is_featured", { ascending: false }).order("created_at", { ascending: false });
+    }
+    const page = Math.max(1, f.page ?? 1);
+    q = q.range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+    const { data, count, error } = await q;
+    if (error) throw error;
+    let products = mergeProducts((data as unknown as Product[]) ?? []);
+    if (f.sort === "best_sellers" || f.sort === "trending") {
+      try {
+        const { data: r } = await supabase.rpc("ranked_products", { _metric: f.sort, _limit: 100 });
+        const rank = new Map((r ?? []).map((x: any, i: number) => [x.product_id, i]));
+        products = [...products].sort((a, b) => (rank.get(a.id) ?? 999) - (rank.get(b.id) ?? 999));
+      } catch {
+        // rank fallback
+      }
+    }
+    return { products, count: count ?? products.length };
+  } catch (e) {
+    console.warn("listProducts fallback:", e);
+    let products = mergeProducts([]);
+    if (ids.collectionId) products = products.filter((p) => p.collection_id === ids.collectionId);
+    if (ids.categoryIds?.length) products = products.filter((p) => p.category_id && ids.categoryIds!.includes(p.category_id));
+    if (f.newOnly) products = products.filter((p) => p.is_new);
+    if (f.sale) products = products.filter((p) => p.on_sale);
+    if (f.min) products = products.filter((p) => p.price >= f.min!);
+    if (f.max) products = products.filter((p) => p.price <= f.max!);
+    const page = Math.max(1, f.page ?? 1);
+    const paginated = products.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    return { products: paginated, count: products.length };
   }
-  switch (f.sort) {
-    case "price_asc":
-      q = q.order("price", { ascending: true });
-      break;
-    case "price_desc":
-      q = q.order("price", { ascending: false });
-      break;
-    case "newest":
-      q = q.order("created_at", { ascending: false });
-      break;
-    default:
-      q = q.order("is_featured", { ascending: false }).order("created_at", { ascending: false });
-  }
-  const page = Math.max(1, f.page ?? 1);
-  q = q.range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
-  const { data, count, error } = await q;
-  if (error) throw new Error("Could not load products");
-  let products = mergeProducts((data as unknown as Product[]) ?? []);
-  if (f.sort === "best_sellers" || f.sort === "trending") {
-    const { data: r } = await supabase.rpc("ranked_products", { _metric: f.sort, _limit: 100 });
-    const rank = new Map((r ?? []).map((x: any, i: number) => [x.product_id, i]));
-    products = [...products].sort((a, b) => (rank.get(a.id) ?? 999) - (rank.get(b.id) ?? 999));
-  }
-  return { products, count: count ?? 0 };
 }
 
 export async function getProduct(slug: string) {
@@ -226,20 +282,34 @@ export async function getProduct(slug: string) {
   const localList = getStoredProducts();
   const localMatch = localList.find((p) => p.slug === slug);
 
-  const { data } = await supabase.from("products").select(PRODUCT_FIELDS).eq("slug", slug).maybeSingle();
-  const baseProduct = (data as unknown as Product) || null;
-  const p = localMatch ? { ...baseProduct, ...localMatch } : baseProduct;
-  if (!p) return null;
+  try {
+    const { data } = await supabase.from("products").select(PRODUCT_FIELDS).eq("slug", slug).maybeSingle();
+    const baseProduct = (data as unknown as Product) || null;
+    const p = localMatch ? { ...baseProduct, ...localMatch } : baseProduct;
+    if (!p) {
+      const fallbackList = mergeProducts([]);
+      const fallbackMatch = fallbackList.find((x) => x.slug === slug);
+      if (!fallbackMatch) return null;
+      return { product: fallbackMatch, completeTheLook: fallbackList.slice(0, 3), youMayLike: fallbackList.slice(3, 7) };
+    }
 
-  const [{ data: sameCol }, { data: sameCat }] = await Promise.all([
-    supabase.from("products").select(PRODUCT_FIELDS).eq("collection_id", p.collection_id ?? "").neq("id", p.id).limit(8),
-    supabase.from("products").select(PRODUCT_FIELDS).eq("category_id", p.category_id ?? "").neq("id", p.id).limit(8),
-  ]);
-  const mergedCol = mergeProducts((sameCol as unknown as Product[]) ?? []);
-  const mergedCat = mergeProducts((sameCat as unknown as Product[]) ?? []);
-  const complete = mergedCol.filter((x) => x.category_id !== p.category_id).slice(0, 4);
-  const like = mergedCat.slice(0, 8);
-  return { product: p, completeTheLook: complete, youMayLike: like.length ? like : mergedCol };
+    const [{ data: sameCol }, { data: sameCat }] = await Promise.all([
+      supabase.from("products").select(PRODUCT_FIELDS).eq("collection_id", p.collection_id ?? "").neq("id", p.id).limit(8),
+      supabase.from("products").select(PRODUCT_FIELDS).eq("category_id", p.category_id ?? "").neq("id", p.id).limit(8),
+    ]);
+    const mergedCol = mergeProducts((sameCol as unknown as Product[]) ?? []);
+    const mergedCat = mergeProducts((sameCat as unknown as Product[]) ?? []);
+    const complete = mergedCol.filter((x) => x.category_id !== p.category_id).slice(0, 4);
+    const like = mergedCat.slice(0, 8);
+    return { product: p, completeTheLook: complete, youMayLike: like.length ? like : mergedCol };
+  } catch (e) {
+    console.warn("getProduct fallback:", e);
+    const fallbackList = mergeProducts([]);
+    const p = fallbackList.find((x) => x.slug === slug);
+    if (!p) return null;
+    const sameCol = fallbackList.filter((x) => x.collection_id === p.collection_id && x.id !== p.id);
+    return { product: p, completeTheLook: sameCol.slice(0, 4), youMayLike: fallbackList.filter((x) => x.id !== p.id).slice(0, 6) };
+  }
 }
 export const productQuery = (slug: string) =>
   queryOptions({ queryKey: ["product", slug], queryFn: () => getProduct(slug) });
