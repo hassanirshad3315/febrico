@@ -20,7 +20,7 @@ const schema = z.object({
 
 /** Records a WhatsApp inquiry (NOT a confirmed sale). Prices are re-read from the database. */
 export const createInquiry = createServerFn({ method: "POST" })
-  .inputValidator((d) => schema.parse(d))
+  .validator((d: unknown) => schema.parse(d))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const ids = [...new Set(data.items.map((i) => i.productId))];

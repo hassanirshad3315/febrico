@@ -6,6 +6,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+log.txt
+
+# Environment variables (NEVER commit keys/secrets)
+.env
+.env.*
+!.env.example
 
 node_modules
 dist
@@ -30,3 +36,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Agent working files
+.agents/

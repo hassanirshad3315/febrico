@@ -1,5 +1,15 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  mergeSettings,
+  mergeAnnouncements,
+  mergeCategories,
+  mergeCollections,
+  mergeProducts,
+  mergeHeroSlides,
+  getStoredProducts,
+  getDeletedProductIds,
+} from "./studio-persistence";
 
 export const PRODUCT_FIELDS =
   "id,name,slug,sku,subtitle,short_description,description,price,sale_price,fabric,fit,season,care,sizes,colors,tags,images,image_alts,focal,stock_status,is_new,is_featured,is_trending,is_best_seller,on_sale,seo_title,seo_description,created_at,category_id,collection_id,collection:collections(name,slug),category:categories(name,slug)";
@@ -79,11 +89,13 @@ async function fetchLayout() {
   ]);
   const s: Record<string, any> = {};
   (settings.data ?? []).forEach((r) => (s[r.key] = r.value));
+  const mergedSettings = mergeSettings(s);
+
   return {
-    announcements: ann.data ?? [],
-    categories: (cats.data ?? []) as Category[],
-    collections: (cols.data ?? []) as Collection[],
-    settings: s,
+    announcements: mergeAnnouncements(ann.data ?? []),
+    categories: mergeCategories((cats.data ?? []) as Category[]),
+    collections: mergeCollections((cols.data ?? []) as Collection[]),
+    settings: mergedSettings,
   };
 }
 export const layoutQuery = queryOptions({ queryKey: ["layout"], queryFn: fetchLayout, staleTime: 60_000 });
@@ -91,7 +103,8 @@ export const layoutQuery = queryOptions({ queryKey: ["layout"], queryFn: fetchLa
 async function productsByIds(ids: string[]) {
   if (!ids.length) return [];
   const { data } = await supabase.from("products").select(PRODUCT_FIELDS).in("id", ids);
-  const map = new Map((data as unknown as Product[] ?? []).map((p) => [p.id, p]));
+  const allProds = mergeProducts((data as unknown as Product[] ?? []));
+  const map = new Map(allProds.map((p) => [p.id, p]));
   return ids.map((id) => map.get(id)).filter(Boolean) as Product[];
 }
 
@@ -102,14 +115,15 @@ export async function productsBySource(source: string, limit = 10): Promise<Prod
     if (ranked.length >= 4) return ranked;
     // graceful fallback when there is not enough data yet
     const { data: fb } = await supabase.from("products").select(PRODUCT_FIELDS).eq("is_featured", true).limit(limit);
-    return [...ranked, ...((fb as unknown as Product[]) ?? []).filter((p) => !ranked.find((r) => r.id === p.id))].slice(0, limit);
+    const mergedFb = mergeProducts((fb as unknown as Product[]) ?? []);
+    return [...ranked, ...mergedFb.filter((p) => !ranked.find((r) => r.id === p.id))].slice(0, limit);
   }
   let q = supabase.from("products").select(PRODUCT_FIELDS).order("created_at", { ascending: false }).limit(limit);
   if (source === "new") q = q.eq("is_new", true);
   if (source === "sale") q = q.eq("on_sale", true);
   if (source === "featured") q = q.eq("is_featured", true);
   const { data } = await q;
-  return (data as unknown as Product[]) ?? [];
+  return mergeProducts((data as unknown as Product[]) ?? []);
 }
 
 async function fetchHome() {
@@ -129,7 +143,8 @@ async function fetchHome() {
     const ids = (data ?? []).map((r: any) => r.collection_id);
     if (ids.length) {
       const { data: cs } = await supabase.from("collections").select("*").in("id", ids);
-      topCols[period] = ids.map((id: string) => (cs ?? []).find((c: any) => c.id === id)).filter(Boolean) as Collection[];
+      const mergedCols = mergeCollections((cs ?? []) as Collection[]);
+      topCols[period] = ids.map((id: string) => mergedCols.find((c: any) => c.id === id)).filter(Boolean) as Collection[];
     } else topCols[period] = [];
   }
   const { data: lookbooks } = await supabase
@@ -138,7 +153,7 @@ async function fetchHome() {
     .order("sort_order");
   return {
     sections: secs.map((s: any, i: number) => ({ ...s, products: productSections[i] })),
-    hero: hero.data ?? [],
+    hero: mergeHeroSlides(hero.data ?? []),
     topCollections: topCols,
     lookbooks: lookbooks ?? [],
   };
@@ -146,24 +161,24 @@ async function fetchHome() {
 export const homeQuery = queryOptions({ queryKey: ["home"], queryFn: fetchHome, staleTime: 30_000 });
 
 export type ListFilters = {
-  category?: string;
-  collection?: string;
-  sizes?: string[];
-  colors?: string[];
-  fabrics?: string[];
-  season?: string;
-  availability?: string;
-  min?: number;
-  max?: number;
-  sort?: string;
-  page?: number;
-  newOnly?: boolean;
-  sale?: boolean;
-  q?: string;
+  category?: string | undefined;
+  collection?: string | undefined;
+  sizes?: string[] | undefined;
+  colors?: string[] | undefined;
+  fabrics?: string[] | undefined;
+  season?: string | undefined;
+  availability?: string | undefined;
+  min?: number | undefined;
+  max?: number | undefined;
+  sort?: string | undefined;
+  page?: number | undefined;
+  newOnly?: boolean | undefined;
+  sale?: boolean | undefined;
+  q?: string | undefined;
 };
 export const PAGE_SIZE = 12;
 
-export async function listProducts(f: ListFilters, ids: { categoryIds?: string[]; collectionId?: string } = {}) {
+export async function listProducts(f: ListFilters, ids: { categoryIds?: string[] | undefined; collectionId?: string | undefined } = {}) {
   let q = supabase.from("products").select(PRODUCT_FIELDS, { count: "exact" });
   if (ids.categoryIds) q = q.in("category_id", ids.categoryIds);
   if (ids.collectionId) q = q.eq("collection_id", ids.collectionId);
@@ -197,7 +212,7 @@ export async function listProducts(f: ListFilters, ids: { categoryIds?: string[]
   q = q.range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
   const { data, count, error } = await q;
   if (error) throw new Error("Could not load products");
-  let products = (data as unknown as Product[]) ?? [];
+  let products = mergeProducts((data as unknown as Product[]) ?? []);
   if (f.sort === "best_sellers" || f.sort === "trending") {
     const { data: r } = await supabase.rpc("ranked_products", { _metric: f.sort, _limit: 100 });
     const rank = new Map((r ?? []).map((x: any, i: number) => [x.product_id, i]));
@@ -207,16 +222,24 @@ export async function listProducts(f: ListFilters, ids: { categoryIds?: string[]
 }
 
 export async function getProduct(slug: string) {
+  // Check local override first by slug
+  const localList = getStoredProducts();
+  const localMatch = localList.find((p) => p.slug === slug);
+
   const { data } = await supabase.from("products").select(PRODUCT_FIELDS).eq("slug", slug).maybeSingle();
-  if (!data) return null;
-  const p = data as unknown as Product;
+  const baseProduct = (data as unknown as Product) || null;
+  const p = localMatch ? { ...baseProduct, ...localMatch } : baseProduct;
+  if (!p) return null;
+
   const [{ data: sameCol }, { data: sameCat }] = await Promise.all([
     supabase.from("products").select(PRODUCT_FIELDS).eq("collection_id", p.collection_id ?? "").neq("id", p.id).limit(8),
     supabase.from("products").select(PRODUCT_FIELDS).eq("category_id", p.category_id ?? "").neq("id", p.id).limit(8),
   ]);
-  const complete = ((sameCol as unknown as Product[]) ?? []).filter((x) => x.category_id !== p.category_id).slice(0, 4);
-  const like = ((sameCat as unknown as Product[]) ?? []).slice(0, 8);
-  return { product: p, completeTheLook: complete, youMayLike: like.length ? like : ((sameCol as unknown as Product[]) ?? []) };
+  const mergedCol = mergeProducts((sameCol as unknown as Product[]) ?? []);
+  const mergedCat = mergeProducts((sameCat as unknown as Product[]) ?? []);
+  const complete = mergedCol.filter((x) => x.category_id !== p.category_id).slice(0, 4);
+  const like = mergedCat.slice(0, 8);
+  return { product: p, completeTheLook: complete, youMayLike: like.length ? like : mergedCol };
 }
 export const productQuery = (slug: string) =>
   queryOptions({ queryKey: ["product", slug], queryFn: () => getProduct(slug) });

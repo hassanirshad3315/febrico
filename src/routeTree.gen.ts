@@ -10,11 +10,145 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FaqsRouteImport } from './routes/faqs'
+import { Route as LookbookRouteImport } from './routes/lookbook'
+import { Route as NewInRouteImport } from './routes/new-in'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ReturnsRouteImport } from './routes/returns'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as ShippingRouteImport } from './routes/shipping'
+import { Route as ShopRouteImport } from './routes/shop'
+import { Route as SizeGuideRouteImport } from './routes/size-guide'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as WishlistRouteImport } from './routes/wishlist'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as CampaignSlugRouteImport } from './routes/campaign/$slug'
+import { Route as CategorySlugRouteImport } from './routes/category/$slug'
+import { Route as CollectionsIndexRouteImport } from './routes/collections/index'
+import { Route as CollectionsSlugRouteImport } from './routes/collections/$slug'
 import { Route as ProductSlugRouteImport } from './routes/product/$slug'
+import { Route as AdminAnalyticsIndexRouteImport } from './routes/admin/analytics/index'
+import { Route as AdminAnalyticsCollectionsRouteImport } from './routes/admin/analytics/collections'
+import { Route as AdminAnalyticsProductsRouteImport } from './routes/admin/analytics/products'
+import { Route as AdminAnalyticsTrafficRouteImport } from './routes/admin/analytics/traffic'
+import { Route as AdminCampaignsIndexRouteImport } from './routes/admin/campaigns/index'
+import { Route as AdminCategoriesIndexRouteImport } from './routes/admin/categories/index'
+import { Route as AdminCollectionsIndexRouteImport } from './routes/admin/collections/index'
+import { Route as AdminCustomersIndexRouteImport } from './routes/admin/customers/index'
+import { Route as AdminHeroIndexRouteImport } from './routes/admin/hero/index'
+import { Route as AdminLookbookIndexRouteImport } from './routes/admin/lookbook/index'
+import { Route as AdminMediaIndexRouteImport } from './routes/admin/media/index'
+import { Route as AdminNavigationIndexRouteImport } from './routes/admin/navigation/index'
+import { Route as AdminOrdersIndexRouteImport } from './routes/admin/orders/index'
+import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages/index'
+import { Route as AdminProductsIndexRouteImport } from './routes/admin/products/index'
+import { Route as AdminProductsIdRouteImport } from './routes/admin/products/$id'
+import { Route as AdminProductsNewRouteImport } from './routes/admin/products/new'
+import { Route as AdminPromotionsIndexRouteImport } from './routes/admin/promotions/index'
+import { Route as AdminSeoIndexRouteImport } from './routes/admin/seo/index'
+import { Route as AdminSettingsIndexRouteImport } from './routes/admin/settings/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqsRoute = FaqsRouteImport.update({
+  id: '/faqs',
+  path: '/faqs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LookbookRoute = LookbookRouteImport.update({
+  id: '/lookbook',
+  path: '/lookbook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewInRoute = NewInRouteImport.update({
+  id: '/new-in',
+  path: '/new-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReturnsRoute = ReturnsRouteImport.update({
+  id: '/returns',
+  path: '/returns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShippingRoute = ShippingRouteImport.update({
+  id: '/shipping',
+  path: '/shipping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SizeGuideRoute = SizeGuideRouteImport.update({
+  id: '/size-guide',
+  path: '/size-guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WishlistRoute = WishlistRouteImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampaignSlugRoute = CampaignSlugRouteImport.update({
+  id: '/campaign/$slug',
+  path: '/campaign/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategorySlugRoute = CategorySlugRouteImport.update({
+  id: '/category/$slug',
+  path: '/category/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectionsIndexRoute = CollectionsIndexRouteImport.update({
+  id: '/collections/',
+  path: '/collections/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectionsSlugRoute = CollectionsSlugRouteImport.update({
+  id: '/collections/$slug',
+  path: '/collections/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductSlugRoute = ProductSlugRouteImport.update({
@@ -22,31 +156,412 @@ const ProductSlugRoute = ProductSlugRouteImport.update({
   path: '/product/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAnalyticsIndexRoute = AdminAnalyticsIndexRouteImport.update({
+  id: '/admin/analytics/',
+  path: '/admin/analytics/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAnalyticsCollectionsRoute =
+  AdminAnalyticsCollectionsRouteImport.update({
+    id: '/admin/analytics/collections',
+    path: '/admin/analytics/collections',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AdminAnalyticsProductsRoute = AdminAnalyticsProductsRouteImport.update({
+  id: '/admin/analytics/products',
+  path: '/admin/analytics/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAnalyticsTrafficRoute = AdminAnalyticsTrafficRouteImport.update({
+  id: '/admin/analytics/traffic',
+  path: '/admin/analytics/traffic',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCampaignsIndexRoute = AdminCampaignsIndexRouteImport.update({
+  id: '/admin/campaigns/',
+  path: '/admin/campaigns/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCategoriesIndexRoute = AdminCategoriesIndexRouteImport.update({
+  id: '/admin/categories/',
+  path: '/admin/categories/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCollectionsIndexRoute = AdminCollectionsIndexRouteImport.update({
+  id: '/admin/collections/',
+  path: '/admin/collections/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCustomersIndexRoute = AdminCustomersIndexRouteImport.update({
+  id: '/admin/customers/',
+  path: '/admin/customers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminHeroIndexRoute = AdminHeroIndexRouteImport.update({
+  id: '/admin/hero/',
+  path: '/admin/hero/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLookbookIndexRoute = AdminLookbookIndexRouteImport.update({
+  id: '/admin/lookbook/',
+  path: '/admin/lookbook/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminMediaIndexRoute = AdminMediaIndexRouteImport.update({
+  id: '/admin/media/',
+  path: '/admin/media/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminNavigationIndexRoute = AdminNavigationIndexRouteImport.update({
+  id: '/admin/navigation/',
+  path: '/admin/navigation/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminOrdersIndexRoute = AdminOrdersIndexRouteImport.update({
+  id: '/admin/orders/',
+  path: '/admin/orders/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPagesIndexRoute = AdminPagesIndexRouteImport.update({
+  id: '/admin/pages/',
+  path: '/admin/pages/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProductsIndexRoute = AdminProductsIndexRouteImport.update({
+  id: '/admin/products/',
+  path: '/admin/products/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProductsIdRoute = AdminProductsIdRouteImport.update({
+  id: '/admin/products/$id',
+  path: '/admin/products/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProductsNewRoute = AdminProductsNewRouteImport.update({
+  id: '/admin/products/new',
+  path: '/admin/products/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPromotionsIndexRoute = AdminPromotionsIndexRouteImport.update({
+  id: '/admin/promotions/',
+  path: '/admin/promotions/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSeoIndexRoute = AdminSeoIndexRouteImport.update({
+  id: '/admin/seo/',
+  path: '/admin/seo/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSettingsIndexRoute = AdminSettingsIndexRouteImport.update({
+  id: '/admin/settings/',
+  path: '/admin/settings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/faqs': typeof FaqsRoute
+  '/lookbook': typeof LookbookRoute
+  '/new-in': typeof NewInRoute
+  '/privacy': typeof PrivacyRoute
+  '/returns': typeof ReturnsRoute
+  '/search': typeof SearchRoute
+  '/shipping': typeof ShippingRoute
+  '/shop': typeof ShopRoute
+  '/size-guide': typeof SizeGuideRoute
+  '/terms': typeof TermsRoute
+  '/wishlist': typeof WishlistRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/campaign/$slug': typeof CampaignSlugRoute
+  '/category/$slug': typeof CategorySlugRoute
+  '/collections/$slug': typeof CollectionsSlugRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/collections/': typeof CollectionsIndexRoute
+  '/admin/analytics/collections': typeof AdminAnalyticsCollectionsRoute
+  '/admin/analytics/products': typeof AdminAnalyticsProductsRoute
+  '/admin/analytics/traffic': typeof AdminAnalyticsTrafficRoute
+  '/admin/products/$id': typeof AdminProductsIdRoute
+  '/admin/products/new': typeof AdminProductsNewRoute
+  '/admin/analytics/': typeof AdminAnalyticsIndexRoute
+  '/admin/campaigns/': typeof AdminCampaignsIndexRoute
+  '/admin/categories/': typeof AdminCategoriesIndexRoute
+  '/admin/collections/': typeof AdminCollectionsIndexRoute
+  '/admin/customers/': typeof AdminCustomersIndexRoute
+  '/admin/hero/': typeof AdminHeroIndexRoute
+  '/admin/lookbook/': typeof AdminLookbookIndexRoute
+  '/admin/media/': typeof AdminMediaIndexRoute
+  '/admin/navigation/': typeof AdminNavigationIndexRoute
+  '/admin/orders/': typeof AdminOrdersIndexRoute
+  '/admin/pages/': typeof AdminPagesIndexRoute
+  '/admin/products/': typeof AdminProductsIndexRoute
+  '/admin/promotions/': typeof AdminPromotionsIndexRoute
+  '/admin/seo/': typeof AdminSeoIndexRoute
+  '/admin/settings/': typeof AdminSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/faqs': typeof FaqsRoute
+  '/lookbook': typeof LookbookRoute
+  '/new-in': typeof NewInRoute
+  '/privacy': typeof PrivacyRoute
+  '/returns': typeof ReturnsRoute
+  '/search': typeof SearchRoute
+  '/shipping': typeof ShippingRoute
+  '/shop': typeof ShopRoute
+  '/size-guide': typeof SizeGuideRoute
+  '/terms': typeof TermsRoute
+  '/wishlist': typeof WishlistRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/campaign/$slug': typeof CampaignSlugRoute
+  '/category/$slug': typeof CategorySlugRoute
+  '/collections/$slug': typeof CollectionsSlugRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/admin': typeof AdminIndexRoute
+  '/collections': typeof CollectionsIndexRoute
+  '/admin/analytics/collections': typeof AdminAnalyticsCollectionsRoute
+  '/admin/analytics/products': typeof AdminAnalyticsProductsRoute
+  '/admin/analytics/traffic': typeof AdminAnalyticsTrafficRoute
+  '/admin/products/$id': typeof AdminProductsIdRoute
+  '/admin/products/new': typeof AdminProductsNewRoute
+  '/admin/analytics': typeof AdminAnalyticsIndexRoute
+  '/admin/campaigns': typeof AdminCampaignsIndexRoute
+  '/admin/categories': typeof AdminCategoriesIndexRoute
+  '/admin/collections': typeof AdminCollectionsIndexRoute
+  '/admin/customers': typeof AdminCustomersIndexRoute
+  '/admin/hero': typeof AdminHeroIndexRoute
+  '/admin/lookbook': typeof AdminLookbookIndexRoute
+  '/admin/media': typeof AdminMediaIndexRoute
+  '/admin/navigation': typeof AdminNavigationIndexRoute
+  '/admin/orders': typeof AdminOrdersIndexRoute
+  '/admin/pages': typeof AdminPagesIndexRoute
+  '/admin/products': typeof AdminProductsIndexRoute
+  '/admin/promotions': typeof AdminPromotionsIndexRoute
+  '/admin/seo': typeof AdminSeoIndexRoute
+  '/admin/settings': typeof AdminSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/faqs': typeof FaqsRoute
+  '/lookbook': typeof LookbookRoute
+  '/new-in': typeof NewInRoute
+  '/privacy': typeof PrivacyRoute
+  '/returns': typeof ReturnsRoute
+  '/search': typeof SearchRoute
+  '/shipping': typeof ShippingRoute
+  '/shop': typeof ShopRoute
+  '/size-guide': typeof SizeGuideRoute
+  '/terms': typeof TermsRoute
+  '/wishlist': typeof WishlistRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/campaign/$slug': typeof CampaignSlugRoute
+  '/category/$slug': typeof CategorySlugRoute
+  '/collections/$slug': typeof CollectionsSlugRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/collections/': typeof CollectionsIndexRoute
+  '/admin/analytics/collections': typeof AdminAnalyticsCollectionsRoute
+  '/admin/analytics/products': typeof AdminAnalyticsProductsRoute
+  '/admin/analytics/traffic': typeof AdminAnalyticsTrafficRoute
+  '/admin/products/$id': typeof AdminProductsIdRoute
+  '/admin/products/new': typeof AdminProductsNewRoute
+  '/admin/analytics/': typeof AdminAnalyticsIndexRoute
+  '/admin/campaigns/': typeof AdminCampaignsIndexRoute
+  '/admin/categories/': typeof AdminCategoriesIndexRoute
+  '/admin/collections/': typeof AdminCollectionsIndexRoute
+  '/admin/customers/': typeof AdminCustomersIndexRoute
+  '/admin/hero/': typeof AdminHeroIndexRoute
+  '/admin/lookbook/': typeof AdminLookbookIndexRoute
+  '/admin/media/': typeof AdminMediaIndexRoute
+  '/admin/navigation/': typeof AdminNavigationIndexRoute
+  '/admin/orders/': typeof AdminOrdersIndexRoute
+  '/admin/pages/': typeof AdminPagesIndexRoute
+  '/admin/products/': typeof AdminProductsIndexRoute
+  '/admin/promotions/': typeof AdminPromotionsIndexRoute
+  '/admin/seo/': typeof AdminSeoIndexRoute
+  '/admin/settings/': typeof AdminSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/product/$slug'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/faqs'
+    | '/lookbook'
+    | '/new-in'
+    | '/privacy'
+    | '/returns'
+    | '/search'
+    | '/shipping'
+    | '/shop'
+    | '/size-guide'
+    | '/terms'
+    | '/wishlist'
+    | '/admin/login'
+    | '/campaign/$slug'
+    | '/category/$slug'
+    | '/collections/$slug'
+    | '/product/$slug'
+    | '/admin/'
+    | '/collections/'
+    | '/admin/analytics/collections'
+    | '/admin/analytics/products'
+    | '/admin/analytics/traffic'
+    | '/admin/products/$id'
+    | '/admin/products/new'
+    | '/admin/analytics/'
+    | '/admin/campaigns/'
+    | '/admin/categories/'
+    | '/admin/collections/'
+    | '/admin/customers/'
+    | '/admin/hero/'
+    | '/admin/lookbook/'
+    | '/admin/media/'
+    | '/admin/navigation/'
+    | '/admin/orders/'
+    | '/admin/pages/'
+    | '/admin/products/'
+    | '/admin/promotions/'
+    | '/admin/seo/'
+    | '/admin/settings/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/product/$slug'
-  id: '__root__' | '/' | '/product/$slug'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/faqs'
+    | '/lookbook'
+    | '/new-in'
+    | '/privacy'
+    | '/returns'
+    | '/search'
+    | '/shipping'
+    | '/shop'
+    | '/size-guide'
+    | '/terms'
+    | '/wishlist'
+    | '/admin/login'
+    | '/campaign/$slug'
+    | '/category/$slug'
+    | '/collections/$slug'
+    | '/product/$slug'
+    | '/admin'
+    | '/collections'
+    | '/admin/analytics/collections'
+    | '/admin/analytics/products'
+    | '/admin/analytics/traffic'
+    | '/admin/products/$id'
+    | '/admin/products/new'
+    | '/admin/analytics'
+    | '/admin/campaigns'
+    | '/admin/categories'
+    | '/admin/collections'
+    | '/admin/customers'
+    | '/admin/hero'
+    | '/admin/lookbook'
+    | '/admin/media'
+    | '/admin/navigation'
+    | '/admin/orders'
+    | '/admin/pages'
+    | '/admin/products'
+    | '/admin/promotions'
+    | '/admin/seo'
+    | '/admin/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/faqs'
+    | '/lookbook'
+    | '/new-in'
+    | '/privacy'
+    | '/returns'
+    | '/search'
+    | '/shipping'
+    | '/shop'
+    | '/size-guide'
+    | '/terms'
+    | '/wishlist'
+    | '/admin/login'
+    | '/campaign/$slug'
+    | '/category/$slug'
+    | '/collections/$slug'
+    | '/product/$slug'
+    | '/admin/'
+    | '/collections/'
+    | '/admin/analytics/collections'
+    | '/admin/analytics/products'
+    | '/admin/analytics/traffic'
+    | '/admin/products/$id'
+    | '/admin/products/new'
+    | '/admin/analytics/'
+    | '/admin/campaigns/'
+    | '/admin/categories/'
+    | '/admin/collections/'
+    | '/admin/customers/'
+    | '/admin/hero/'
+    | '/admin/lookbook/'
+    | '/admin/media/'
+    | '/admin/navigation/'
+    | '/admin/orders/'
+    | '/admin/pages/'
+    | '/admin/products/'
+    | '/admin/promotions/'
+    | '/admin/seo/'
+    | '/admin/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
+  FaqsRoute: typeof FaqsRoute
+  LookbookRoute: typeof LookbookRoute
+  NewInRoute: typeof NewInRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ReturnsRoute: typeof ReturnsRoute
+  SearchRoute: typeof SearchRoute
+  ShippingRoute: typeof ShippingRoute
+  ShopRoute: typeof ShopRoute
+  SizeGuideRoute: typeof SizeGuideRoute
+  TermsRoute: typeof TermsRoute
+  WishlistRoute: typeof WishlistRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  CampaignSlugRoute: typeof CampaignSlugRoute
+  CategorySlugRoute: typeof CategorySlugRoute
+  CollectionsSlugRoute: typeof CollectionsSlugRoute
   ProductSlugRoute: typeof ProductSlugRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  CollectionsIndexRoute: typeof CollectionsIndexRoute
+  AdminAnalyticsCollectionsRoute: typeof AdminAnalyticsCollectionsRoute
+  AdminAnalyticsProductsRoute: typeof AdminAnalyticsProductsRoute
+  AdminAnalyticsTrafficRoute: typeof AdminAnalyticsTrafficRoute
+  AdminProductsIdRoute: typeof AdminProductsIdRoute
+  AdminProductsNewRoute: typeof AdminProductsNewRoute
+  AdminAnalyticsIndexRoute: typeof AdminAnalyticsIndexRoute
+  AdminCampaignsIndexRoute: typeof AdminCampaignsIndexRoute
+  AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
+  AdminCollectionsIndexRoute: typeof AdminCollectionsIndexRoute
+  AdminCustomersIndexRoute: typeof AdminCustomersIndexRoute
+  AdminHeroIndexRoute: typeof AdminHeroIndexRoute
+  AdminLookbookIndexRoute: typeof AdminLookbookIndexRoute
+  AdminMediaIndexRoute: typeof AdminMediaIndexRoute
+  AdminNavigationIndexRoute: typeof AdminNavigationIndexRoute
+  AdminOrdersIndexRoute: typeof AdminOrdersIndexRoute
+  AdminPagesIndexRoute: typeof AdminPagesIndexRoute
+  AdminProductsIndexRoute: typeof AdminProductsIndexRoute
+  AdminPromotionsIndexRoute: typeof AdminPromotionsIndexRoute
+  AdminSeoIndexRoute: typeof AdminSeoIndexRoute
+  AdminSettingsIndexRoute: typeof AdminSettingsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +573,139 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faqs': {
+      id: '/faqs'
+      path: '/faqs'
+      fullPath: '/faqs'
+      preLoaderRoute: typeof FaqsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lookbook': {
+      id: '/lookbook'
+      path: '/lookbook'
+      fullPath: '/lookbook'
+      preLoaderRoute: typeof LookbookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/new-in': {
+      id: '/new-in'
+      path: '/new-in'
+      fullPath: '/new-in'
+      preLoaderRoute: typeof NewInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/returns': {
+      id: '/returns'
+      path: '/returns'
+      fullPath: '/returns'
+      preLoaderRoute: typeof ReturnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shipping': {
+      id: '/shipping'
+      path: '/shipping'
+      fullPath: '/shipping'
+      preLoaderRoute: typeof ShippingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/size-guide': {
+      id: '/size-guide'
+      path: '/size-guide'
+      fullPath: '/size-guide'
+      preLoaderRoute: typeof SizeGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wishlist': {
+      id: '/wishlist'
+      path: '/wishlist'
+      fullPath: '/wishlist'
+      preLoaderRoute: typeof WishlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/campaign/$slug': {
+      id: '/campaign/$slug'
+      path: '/campaign/$slug'
+      fullPath: '/campaign/$slug'
+      preLoaderRoute: typeof CampaignSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/category/$slug': {
+      id: '/category/$slug'
+      path: '/category/$slug'
+      fullPath: '/category/$slug'
+      preLoaderRoute: typeof CategorySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collections/': {
+      id: '/collections/'
+      path: '/collections'
+      fullPath: '/collections/'
+      preLoaderRoute: typeof CollectionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collections/$slug': {
+      id: '/collections/$slug'
+      path: '/collections/$slug'
+      fullPath: '/collections/$slug'
+      preLoaderRoute: typeof CollectionsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/product/$slug': {
       id: '/product/$slug'
       path: '/product/$slug'
@@ -65,12 +713,191 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/analytics/': {
+      id: '/admin/analytics/'
+      path: '/admin/analytics'
+      fullPath: '/admin/analytics/'
+      preLoaderRoute: typeof AdminAnalyticsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/analytics/collections': {
+      id: '/admin/analytics/collections'
+      path: '/admin/analytics/collections'
+      fullPath: '/admin/analytics/collections'
+      preLoaderRoute: typeof AdminAnalyticsCollectionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/analytics/products': {
+      id: '/admin/analytics/products'
+      path: '/admin/analytics/products'
+      fullPath: '/admin/analytics/products'
+      preLoaderRoute: typeof AdminAnalyticsProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/analytics/traffic': {
+      id: '/admin/analytics/traffic'
+      path: '/admin/analytics/traffic'
+      fullPath: '/admin/analytics/traffic'
+      preLoaderRoute: typeof AdminAnalyticsTrafficRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/campaigns/': {
+      id: '/admin/campaigns/'
+      path: '/admin/campaigns'
+      fullPath: '/admin/campaigns/'
+      preLoaderRoute: typeof AdminCampaignsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/categories/': {
+      id: '/admin/categories/'
+      path: '/admin/categories'
+      fullPath: '/admin/categories/'
+      preLoaderRoute: typeof AdminCategoriesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/collections/': {
+      id: '/admin/collections/'
+      path: '/admin/collections'
+      fullPath: '/admin/collections/'
+      preLoaderRoute: typeof AdminCollectionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/customers/': {
+      id: '/admin/customers/'
+      path: '/admin/customers'
+      fullPath: '/admin/customers/'
+      preLoaderRoute: typeof AdminCustomersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/hero/': {
+      id: '/admin/hero/'
+      path: '/admin/hero'
+      fullPath: '/admin/hero/'
+      preLoaderRoute: typeof AdminHeroIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/lookbook/': {
+      id: '/admin/lookbook/'
+      path: '/admin/lookbook'
+      fullPath: '/admin/lookbook/'
+      preLoaderRoute: typeof AdminLookbookIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/media/': {
+      id: '/admin/media/'
+      path: '/admin/media'
+      fullPath: '/admin/media/'
+      preLoaderRoute: typeof AdminMediaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/navigation/': {
+      id: '/admin/navigation/'
+      path: '/admin/navigation'
+      fullPath: '/admin/navigation/'
+      preLoaderRoute: typeof AdminNavigationIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/orders/': {
+      id: '/admin/orders/'
+      path: '/admin/orders'
+      fullPath: '/admin/orders/'
+      preLoaderRoute: typeof AdminOrdersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/pages/': {
+      id: '/admin/pages/'
+      path: '/admin/pages'
+      fullPath: '/admin/pages/'
+      preLoaderRoute: typeof AdminPagesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/products/': {
+      id: '/admin/products/'
+      path: '/admin/products'
+      fullPath: '/admin/products/'
+      preLoaderRoute: typeof AdminProductsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/products/$id': {
+      id: '/admin/products/$id'
+      path: '/admin/products/$id'
+      fullPath: '/admin/products/$id'
+      preLoaderRoute: typeof AdminProductsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/products/new': {
+      id: '/admin/products/new'
+      path: '/admin/products/new'
+      fullPath: '/admin/products/new'
+      preLoaderRoute: typeof AdminProductsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/promotions/': {
+      id: '/admin/promotions/'
+      path: '/admin/promotions'
+      fullPath: '/admin/promotions/'
+      preLoaderRoute: typeof AdminPromotionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/seo/': {
+      id: '/admin/seo/'
+      path: '/admin/seo'
+      fullPath: '/admin/seo/'
+      preLoaderRoute: typeof AdminSeoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/settings/': {
+      id: '/admin/settings/'
+      path: '/admin/settings'
+      fullPath: '/admin/settings/'
+      preLoaderRoute: typeof AdminSettingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
+  FaqsRoute: FaqsRoute,
+  LookbookRoute: LookbookRoute,
+  NewInRoute: NewInRoute,
+  PrivacyRoute: PrivacyRoute,
+  ReturnsRoute: ReturnsRoute,
+  SearchRoute: SearchRoute,
+  ShippingRoute: ShippingRoute,
+  ShopRoute: ShopRoute,
+  SizeGuideRoute: SizeGuideRoute,
+  TermsRoute: TermsRoute,
+  WishlistRoute: WishlistRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  CampaignSlugRoute: CampaignSlugRoute,
+  CategorySlugRoute: CategorySlugRoute,
+  CollectionsSlugRoute: CollectionsSlugRoute,
   ProductSlugRoute: ProductSlugRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  CollectionsIndexRoute: CollectionsIndexRoute,
+  AdminAnalyticsCollectionsRoute: AdminAnalyticsCollectionsRoute,
+  AdminAnalyticsProductsRoute: AdminAnalyticsProductsRoute,
+  AdminAnalyticsTrafficRoute: AdminAnalyticsTrafficRoute,
+  AdminProductsIdRoute: AdminProductsIdRoute,
+  AdminProductsNewRoute: AdminProductsNewRoute,
+  AdminAnalyticsIndexRoute: AdminAnalyticsIndexRoute,
+  AdminCampaignsIndexRoute: AdminCampaignsIndexRoute,
+  AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
+  AdminCollectionsIndexRoute: AdminCollectionsIndexRoute,
+  AdminCustomersIndexRoute: AdminCustomersIndexRoute,
+  AdminHeroIndexRoute: AdminHeroIndexRoute,
+  AdminLookbookIndexRoute: AdminLookbookIndexRoute,
+  AdminMediaIndexRoute: AdminMediaIndexRoute,
+  AdminNavigationIndexRoute: AdminNavigationIndexRoute,
+  AdminOrdersIndexRoute: AdminOrdersIndexRoute,
+  AdminPagesIndexRoute: AdminPagesIndexRoute,
+  AdminProductsIndexRoute: AdminProductsIndexRoute,
+  AdminPromotionsIndexRoute: AdminPromotionsIndexRoute,
+  AdminSeoIndexRoute: AdminSeoIndexRoute,
+  AdminSettingsIndexRoute: AdminSettingsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
