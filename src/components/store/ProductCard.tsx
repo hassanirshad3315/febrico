@@ -87,19 +87,6 @@ export function ProductCard({ p, badge, priority }: { p: Product; badge?: string
         </div>
       </Link>
       <WishlistButton productId={p.id} className="absolute right-1 top-1 text-foreground" />
-      <button
-        type="button"
-        onClick={() => {
-          track("quick_view", { product_id: p.id, collection_id: p.collection_id, source: "card" });
-          openQuickView(p);
-        }}
-        className="eyebrow absolute inset-x-3 top-[calc(66.666%*1.5-3.5rem)] hidden translate-y-2 bg-background/95 py-3 text-center text-[0.62rem] opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 md:block"
-        style={{ top: "auto", bottom: "calc(100% - (100% * 0) )" }}
-        aria-label={`Quick view ${p.name}`}
-        hidden
-      >
-        Quick View
-      </button>
       <div className="mt-4 space-y-1">
         {p.collection && <p className="eyebrow text-[0.6rem] text-muted-foreground">{p.collection.name}</p>}
         <div className="flex items-start justify-between gap-2">
