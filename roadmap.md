@@ -1,6 +1,6 @@
 # FABRICO Roadmap
 
-- [ ] Database schema + demo data
-- [ ] Storefront foundation (priority): responsive nav + mega menu, announcement bar, hero, product grid, routing for core shopping pages
-- [ ] Product page, quick view, wishlist, bag, multi-product WhatsApp ordering + tracking
-- [ ] Admin: login/roles, dashboard, products, orders, analytics, CMS (hero, campaigns, lookbook, pages, settings)
+- [x] Database schema + demo data (24 products, collections, campaigns, lookbook, sample orders/analytics)
+- [~] Storefront foundation (priority): done — design system, hero, data-driven product rails, product page. Open — announcement bar, sticky nav + mega menu, mobile nav, footer, /shop, /new-in, /collections, /category, /search, /wishlist
+- [ ] Quick view (basic done), bag drawer, multi-product WhatsApp ordering UI (ordering logic ready)
+- [ ] Admin: login/roles, dashboard, products, orders, analytics, CMS
