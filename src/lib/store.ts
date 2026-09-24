@@ -52,14 +52,14 @@ export const store = {
   addToBag(item: BagItem) {
     const i = state.bag.findIndex((b) => b.productId === item.productId && b.size === item.size && b.color === item.color);
     const bag = [...state.bag];
-    if (i >= 0) bag[i] = { ...bag[i], qty: Math.min(10, bag[i].qty + item.qty) };
+    if (i >= 0) bag[i] = { ...bag[i]!, qty: Math.min(10, bag[i]!.qty + item.qty) };
     else bag.push(item);
     set({ bag, bagOpen: true });
   },
   setQty(idx: number, qty: number) {
     const bag = [...state.bag];
     if (qty <= 0) bag.splice(idx, 1);
-    else bag[idx] = { ...bag[idx], qty: Math.min(10, qty) };
+    else bag[idx] = { ...bag[idx]!, qty: Math.min(10, qty) };
     set({ bag });
   },
   clearBag() {

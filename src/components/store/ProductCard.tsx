@@ -51,7 +51,7 @@ export function WishlistButton({ productId, className }: { productId: string; cl
   );
 }
 
-export function ProductCard({ p, badge, priority }: { p: Product; badge?: string; priority?: boolean }) {
+export function ProductCard({ p, badge, priority }: { p: Product; badge?: string | undefined; priority?: boolean }) {
   const b = productBadge(p, badge);
   return (
     <article className="group relative">

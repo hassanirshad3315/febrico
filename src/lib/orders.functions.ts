@@ -40,7 +40,7 @@ export const createInquiry = createServerFn({ method: "POST" })
     const total = rows.reduce((s, r) => s + r.qty * r.unit_price, 0);
     const { data: order, error: oe } = await supabaseAdmin
       .from("orders")
-      .insert({ source: data.source, status: "whatsapp_opened", total, session_id: data.session_id, campaign_slug: data.campaign_slug })
+      .insert({ source: data.source, status: "whatsapp_opened", total, session_id: data.session_id ?? null, campaign_slug: data.campaign_slug ?? null })
       .select("id")
       .single();
     if (oe || !order) return { ok: false };
@@ -50,10 +50,10 @@ export const createInquiry = createServerFn({ method: "POST" })
       rows.map((r) => ({
         event_type: "whatsapp_inquiry",
         product_id: r.product_id,
-        collection_id: prods.find((p) => p.id === r.product_id)?.collection_id,
+        collection_id: prods.find((p) => p.id === r.product_id)?.collection_id ?? null,
         source: data.source,
-        session_id: data.session_id,
-        campaign_slug: data.campaign_slug,
+        session_id: data.session_id ?? null,
+        campaign_slug: data.campaign_slug ?? null,
       })),
     );
     return { ok: true };

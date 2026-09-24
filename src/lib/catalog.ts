@@ -129,7 +129,7 @@ async function fetchHome() {
     const ids = (data ?? []).map((r: any) => r.collection_id);
     if (ids.length) {
       const { data: cs } = await supabase.from("collections").select("*").in("id", ids);
-      topCols[period] = ids.map((id: string) => (cs ?? []).find((c: any) => c.id === id)).filter(Boolean);
+      topCols[period] = ids.map((id: string) => (cs ?? []).find((c: any) => c.id === id)).filter(Boolean) as Collection[];
     } else topCols[period] = [];
   }
   const { data: lookbooks } = await supabase
